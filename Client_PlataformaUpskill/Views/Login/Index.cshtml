@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+
+<h3>@ViewBag.Error</h3>
+<h5>@ViewBag.Message</h5>
+
+<form method="post">
+    <label>Email: </label> <input type="text"id="email" name="email" /><p></p>
+        <label>Password: </label> <input type="password" id="password" name="password" />
+        <br /><br />
+        <input type="submit" value="Login" />
+</form>
+

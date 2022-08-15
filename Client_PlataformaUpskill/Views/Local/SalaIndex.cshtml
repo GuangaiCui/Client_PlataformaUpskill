@@ -1,0 +1,56 @@
+﻿@model IEnumerable<PlataformaUpskill_API.Data.Models.Sala>
+
+@{
+    ViewData["Title"] = "SalaIndex";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-controller="Local" asp-action="SalaCreate">Create New Sala</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Local.Nome)
+            </th>
+
+
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Local.Nome)
+                </td>
+
+
+                <td>
+                    <div class="w-75 btn-group" role="group">
+                        <a asp-controller="Local" asp-action="SalaDetails" asp-route-id="@item.Id"
+                       class="btn btn-primary mx-2">  Details</a>
+                        <a asp-controller="Local" asp-action="SalaEdit" asp-route-id="@item.Id"
+                       class="btn btn-primary mx-2">  Edit</a>
+
+                        <form asp-action="SalaDelete" asp-route-id="@item.Id">
+                            <input type="submit" value="Delete" class="btn btn-danger mx-2" />
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

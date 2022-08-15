@@ -1,0 +1,68 @@
+﻿@model IEnumerable<PlataformaUpskill_API.Data.Models.Formando>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Formandos</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Pessoa.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pessoa.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pessoa.ContactoTelefone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Turma.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Turma.Curso)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estado.Nome)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Pessoa.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Pessoa.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Pessoa.ContactoTelefone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Turma.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Turma.Curso)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Estado.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Estado.Nome)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
