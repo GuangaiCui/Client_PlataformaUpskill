@@ -17,7 +17,7 @@ namespace Client_PlataformaUpskill.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(Login request)
         {
-            //Pessoa user = new Pessoa();
+            Pessoa user = new Pessoa();
             using (var httpClient = new HttpClient())
             {
 
@@ -27,6 +27,16 @@ namespace Client_PlataformaUpskill.Controllers
                         string token = await response.Content.ReadAsStringAsync();
                         HttpContext.Session.SetString("token", token);
                     }
+
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("token"));
+                using (var response = await httpClient.GetAsync("https://localhost:7252/PessoaControllers/GetEmail?email=" + request.Email))
+                {
+
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    user = JsonConvert.DeserializeObject<Pessoa>(apiResponse);
+                    HttpContext.Session.SetString("role", user.Perfil.Nome);
+                }
+
 
                     return RedirectToAction("Index", "Home");
             }

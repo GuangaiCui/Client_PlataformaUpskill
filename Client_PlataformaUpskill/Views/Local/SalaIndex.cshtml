@@ -16,11 +16,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Nome)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Local.Nome)
-            </th>
-
-
 
             <th></th>
         </tr>
@@ -32,9 +27,6 @@
 
                 <td>
                     @Html.DisplayFor(modelItem => item.Nome)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Local.Nome)
                 </td>
 
 
@@ -54,3 +46,6 @@
         }
     </tbody>
 </table>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

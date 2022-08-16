@@ -1,6 +1,8 @@
 ﻿@inject IHttpContextAccessor HttpContextAccessor;
 @{
     string token = HttpContextAccessor.HttpContext.Session.GetString("token");
+    string role = HttpContextAccessor.HttpContext.Session.GetString("role");
+
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -29,6 +31,8 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        @if(role=="Administrador")
+                        {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Formando" asp-action="Index">Formandos</a>
                         </li>
@@ -44,9 +48,13 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Local" asp-action="Index">Local e Sala</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">Login</a>
-                        </li>
+                        }
+                        @if (token == null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">Login</a>
+                            </li>
+                        }
 
                     </ul>
                     @if (token != null)

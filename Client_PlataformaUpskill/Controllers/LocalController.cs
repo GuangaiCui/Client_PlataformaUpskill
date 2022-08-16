@@ -117,7 +117,7 @@ namespace Client_PlataformaUpskill.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> SalaIndex()
+        public async Task<IActionResult> SalaIndex(int id)
         {
             List<Sala> salas = new List<Sala>();
 
@@ -126,7 +126,7 @@ namespace Client_PlataformaUpskill.Controllers
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("token"));
 
                 //call sala with localid
-                using (var response = await httpClient.GetAsync("https://localhost:7252/SalaControllers/All"))
+                using (var response = await httpClient.GetAsync("https://localhost:7252/SalaControllers/GetByLocal?id="+id))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
                     salas = JsonConvert.DeserializeObject<List<Sala>>(apiResponse);
@@ -157,19 +157,20 @@ namespace Client_PlataformaUpskill.Controllers
                 {
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("token"));
 
-                StringContent content = new StringContent(JsonConvert.SerializeObject(sala), Encoding.UTF8, "application/json");
-                using (var response = await httpClient.GetAsync("https://localhost:7252/CursoControllers?id=" + sala.LocalId))
+                
+                using (var response = await httpClient.GetAsync("https://localhost:7252/LocalControllers?id=" + sala.LocalId))
                 {
                     string apiresponse = await response.Content.ReadAsStringAsync();
                     sala.Local = JsonConvert.DeserializeObject<Local>(apiresponse);
                 }
+                StringContent content = new StringContent(JsonConvert.SerializeObject(sala), Encoding.UTF8, "application/json");
                 using (var response = await httpClient.PostAsync("https://localhost:7252/SalaControllers", content))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
-                        sala = JsonConvert.DeserializeObject<Sala>(apiResponse);
+                        //sala = JsonConvert.DeserializeObject<Sala>(apiResponse);
                     }
                 }
-                return View(sala);
+                return RedirectToAction("SalaIndex","Local", new { id = sala.LocalId });
         }
 
         public async Task<IActionResult> SalaDetails(int id)
@@ -189,7 +190,7 @@ namespace Client_PlataformaUpskill.Controllers
         }
         public async Task<IActionResult> SalaEdit(int id)
         {
-            Sala sala = new Sala();
+            Local_Sala obj = new Local_Sala();
             using (var httpClient = new HttpClient())
             {
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("token"));
@@ -197,10 +198,15 @@ namespace Client_PlataformaUpskill.Controllers
                 using (var response = await httpClient.GetAsync("https://localhost:7252/SalaControllers?id=" + id))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
-                    sala = JsonConvert.DeserializeObject<Sala>(apiResponse);
+                    obj.Sala = JsonConvert.DeserializeObject<Sala>(apiResponse);
+                }
+                using (var response = await httpClient.GetAsync("https://localhost:7252/LocalControllers/All"))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    obj.Local = JsonConvert.DeserializeObject<List<Local>>(apiResponse);
                 }
             }
-            return View(sala);
+            return View(obj);
         }
         [HttpPost]
         public async Task<IActionResult> SalaEdit(Sala sala)
@@ -208,29 +214,38 @@ namespace Client_PlataformaUpskill.Controllers
             using (var httpClient = new HttpClient())
             {
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("token"));
-
+                using (var response = await httpClient.GetAsync("https://localhost:7252/LocalControllers?id=" + sala.LocalId))
+                {
+                    string apiresponse = await response.Content.ReadAsStringAsync();
+                    sala.Local = JsonConvert.DeserializeObject<Local>(apiresponse);
+                }
                 StringContent content = new StringContent(JsonConvert.SerializeObject(sala), Encoding.UTF8, "application/json");
                 using (var response = await httpClient.PutAsync("https://localhost:7252/SalaControllers", content))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
-                    sala = JsonConvert.DeserializeObject<Sala>(apiResponse);
+                    //sala = JsonConvert.DeserializeObject<Sala>(apiResponse);
                 }
             }
-            return View(sala);
+            return RedirectToAction("SalaIndex", "Local", new { id = sala.LocalId });
         }
         [HttpPost]
         public async Task<IActionResult> SalaDelete(int id)
         {
+            Sala sala = new Sala();
             using (var httpClient = new HttpClient())
             {
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", HttpContext.Session.GetString("token"));
-
+                using (var response = await httpClient.GetAsync("https://localhost:7252/SalaControllers?id=" + id))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    sala = JsonConvert.DeserializeObject<Sala>(apiResponse);
+                }
                 using (var response = await httpClient.DeleteAsync("https://localhost:7252/SalaControllers?id=" + id))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
                 }
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("SalaIndex", "Local", new { id = sala.LocalId });
         }
     }
 }
